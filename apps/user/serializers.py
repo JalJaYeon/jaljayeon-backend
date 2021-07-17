@@ -17,11 +17,8 @@ class UserSerializer(serializers.ModelSerializer):
         required=True,
         validators=[validate_hour_minute_format])
 
-    def get_average_sleep_time(self, obj: time):
-        return obj.strftime(self.TIME_FORMAT)
-
-    def get_bedtime_starts_at(self, obj: time):
-        return obj.strftime(self.TIME_FORMAT)
+    average_sleep_time: time = serializers.TimeField(format="%H:%M")
+    bedtime_starts_at: time = serializers.TimeField(format="%H:%M")
 
     class Meta:
         model = User

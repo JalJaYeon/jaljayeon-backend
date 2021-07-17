@@ -4,7 +4,6 @@ from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from apps.user.models import User
-from apps.user.utils import format_time
 from apps.user.serializers import UserSerializer
 
 
@@ -36,11 +35,4 @@ class UserView(viewsets.GenericViewSet):
             bedtime_starts_at=time(bedtime_starts_at_hour,
                                    bedtime_starts_at_minute),
         )
-        response_data = serializer.data
-
-        response_data['average_sleep_time'] = format_time(
-            response_data['average_sleep_time'])
-        response_data['bedtime_starts_at'] = format_time(
-            response_data['bedtime_starts_at']
-        )  # change time format from %H:%M:%S to %H:%M
-        return Response(response_data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
