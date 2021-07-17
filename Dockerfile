@@ -7,8 +7,8 @@ ENV PYTHONBUFFERED 1
 
 # install dependencies
 COPY ./requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip;\
-    pip install -r --no-cache-dir requirements.txt
+RUN pip install --upgrade pip;\
+    pip install -r requirements.txt
 
 # copy source code
 COPY . .
