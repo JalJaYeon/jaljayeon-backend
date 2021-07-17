@@ -1,4 +1,4 @@
-from datetime import time
+from apps.user.models import User
 from rest_framework.test import APITestCase
 
 
@@ -57,3 +57,25 @@ class TestUserRegistration(APITestCase):
                 "bedtime_starts_at": "asdf",
             })
         self.assertEqual(400, response.status_code)
+
+
+class TestUserIssuingToken(APITestCase):
+    def test_issuing_token_should_success(self):
+        response = self.client.post(
+            "/api/users/register", {
+                "name": "홍길동",
+                "username": "test_user",
+                "password": "thePAS123!Q",
+                "weight_kg": 71,
+                "average_sleep_time": "06:30",
+                "bedtime_starts_at": "00:10",
+            })
+
+        response = self.client.post(
+            '/api/token',
+            {
+                "username": "test_user",
+                "password": "thePAS123!Q",
+            },
+        )
+        self.assertEqual(200, response.status_code)
