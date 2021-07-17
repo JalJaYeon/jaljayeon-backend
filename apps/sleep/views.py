@@ -19,9 +19,8 @@ class SleepView(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
         serializer.save(owner=self.request.user)
 
     def get_queryset(self):
-        if self.action == 'list':
-            return Sleep.objects.filter(owner=self.request.user)
-        return Sleep.objects.all()
+        return Sleep.objects.filter(
+            owner=self.request.user).order_by('-slept_date')
 
     @action(methods=['get'], detail=False)
     def today(self, request: HttpRequest, *args, **kwargs):
