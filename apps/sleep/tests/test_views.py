@@ -171,7 +171,7 @@ class TestReportingSleep(APITestCase):
         self.assertEqual(response.status_code, 401)
 
 
-class TestRetreivingSleep(APITestCase):
+class TestRetrievingSleep(APITestCase):
     ENDPOINT = '/api/sleep'
     """
     The requesting endpoint should return response successfully only when:
@@ -440,8 +440,8 @@ class TestListingSleep(APITestCase):
         self.assertEqual(len(response.data), sleeps_cnt)
 
 
-class TestIsTodayReported(APITestCase):
-    ENDPOINT = '/api/sleep/is-today-reported'
+class TestRetrievingToday(APITestCase):
+    ENDPOINT = '/api/sleep/today'
 
     user_1: User
     access_token_1: str
@@ -470,6 +470,12 @@ class TestIsTodayReported(APITestCase):
             HTTP_AUTHORIZATION='Bearer ' + self.access_token_1,
         )
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['owner'], self.user_1.username)
+        self.assertEqual(response.data['slept_time'], time(8, 30))
+        self.assertEqual(response.data['is_enough_sleep'], True)
+        self.assertEqual(response.data['used_phone_30_mins_before_sleep'],
+                         True)
+        self.assertEqual(response.data['tiredness_level'], 1)
 
     def test_is_today_reported_should_return_400(self):
         response = self.client.get(
