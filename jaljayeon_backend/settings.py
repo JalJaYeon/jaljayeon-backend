@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'safedelete',
     # my apps
     'apps.user',
+    'apps.sleep',
 ]
 
 MIDDLEWARE = [
