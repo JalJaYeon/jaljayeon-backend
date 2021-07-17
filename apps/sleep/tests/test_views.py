@@ -471,7 +471,6 @@ class TestRetrievingToday(APITestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['owner'], self.user_1.username)
-        self.assertEqual(response.data['slept_time'], time(8, 30))
         self.assertEqual(response.data['is_enough_sleep'], True)
         self.assertEqual(response.data['used_phone_30_mins_before_sleep'],
                          True)
