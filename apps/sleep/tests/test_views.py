@@ -1,4 +1,4 @@
-from datetime import date, time
+from datetime import datetime, date, time
 from apps.user.models import User
 from rest_framework.test import APITestCase
 from apps.common.test import create_sample_user_and_get_token
@@ -438,3 +438,46 @@ class TestListingSleep(APITestCase):
                                    self.access_token_2)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), sleeps_cnt)
+
+
+class TestIsTodayReported(APITestCase):
+    ENDPOINT = '/api/sleep/is-today-reported'
+
+    user_1: User
+    access_token_1: str
+    user_2: User
+    access_token_2: str
+
+    def setUp(self):
+        self.user_1, self.access_token_1 = create_sample_user_and_get_token(
+            self.client, 'test_user')
+        self.user_2, self.access_token_2 = create_sample_user_and_get_token(
+            self.client, 'another_user')
+
+        # create fixtures
+        ## user 1 data
+
+        Sleep.objects.create(owner=self.user_1,
+                             slept_date=datetime.today().date(),
+                             slept_time=time(8, 30),
+                             is_enough_sleep=True,
+                             used_phone_30_mins_before_sleep=True,
+                             tiredness_level=1)
+
+    def test_is_today_reported_should_return_200(self):
+        response = self.client.get(
+            self.ENDPOINT,
+            HTTP_AUTHORIZATION='Bearer ' + self.access_token_1,
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_is_today_reported_should_return_400(self):
+        response = self.client.get(
+            self.ENDPOINT,
+            HTTP_AUTHORIZATION='Bearer ' + self.access_token_2,
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_is_today_reported_should_return_401(self):
+        response = self.client.get(self.ENDPOINT)
+        self.assertEqual(response.status_code, 401)
