@@ -1,5 +1,11 @@
+from datetime import datetime
+from drf_spectacular.utils import extend_schema
+from django.http.request import HttpRequest
+from rest_framework import mixins, viewsets, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from apps.user.models import User
 from apps.sleep.models import Sleep
-from rest_framework import mixins, viewsets
 from apps.sleep.permissions import IsOwner
 from apps.sleep.serializers import SleepSerializer
 
@@ -16,3 +22,19 @@ class SleepView(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
         if self.action == 'list':
             return Sleep.objects.filter(owner=self.request.user)
         return Sleep.objects.all()
+
+    @extend_schema(
+        request=None,
+        responses={
+            200: None,
+            400: None
+        },
+    )
+    @action(methods=['get'], detail=False, url_path="is-today-reported")
+    def is_today_reported(self, request: HttpRequest, *args, **kwargs):
+        user: User = self.request.user
+        if Sleep.objects.filter(owner=user,
+                                slept_date=datetime.today().date()).exists():
+            return Response(status=status.HTTP_200_OK, data=True)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=False)
