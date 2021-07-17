@@ -18,10 +18,9 @@ services:
         restart: "unless-stopped"
         environment:
             - POSTGRES_HOST=psql_db
+            - DEBUG=false
         depends_on:
             - psql_db
-        expose:
-            - 8000
         deploy:
             restart_policy:
                 condition: on-failure
