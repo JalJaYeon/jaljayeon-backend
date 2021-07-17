@@ -1,3 +1,4 @@
 from django.contrib import admin
+from apps.sleep.models import Sleep
 
-# Register your models here.
+admin.site.register(Sleep)
