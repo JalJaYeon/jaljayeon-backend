@@ -16,9 +16,10 @@ class SleepSerializer(serializers.ModelSerializer):
                                                required=True)
     ai_advice: str = serializers.SerializerMethodField()
 
-    def get_ai_advice(self, obj: str):
-        # request to the ai server
-        return ''
+    def get_ai_advice(self, obj: Sleep):
+        if obj.tiredness_level < 3:
+            return "- 수면 시간을 7시간으로 늘리세요\n- 취침 전 휴대폰 사용은 좋지 않아요"
+        return "좋은 수면을 하셨습니다. 앞으로 유지해주세요"
 
     def validate(self, attrs):
         user: User = self.context['request'].user
