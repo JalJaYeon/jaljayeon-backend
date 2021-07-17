@@ -277,7 +277,7 @@ class TestRetrievingSleep(APITestCase):
         response = self.client.get(self.ENDPOINT + f"/{sleep.pk}",
                                    HTTP_AUTHORIZATION='Bearer ' +
                                    self.access_token_2)
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 404)
 
     def test_unauthorized_request_should_fail(self):
         sleep = Sleep.objects.filter(owner=self.user_1)[0]
@@ -430,6 +430,7 @@ class TestListingSleep(APITestCase):
                                    self.access_token_1)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), sleeps_cnt)
+        print(response.data)
 
     def test_list_sleep_should_success_2(self):
         sleeps_cnt = Sleep.objects.filter(owner=self.user_2).count()
