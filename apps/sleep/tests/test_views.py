@@ -430,7 +430,6 @@ class TestListingSleep(APITestCase):
                                    self.access_token_1)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), sleeps_cnt)
-        print(response.data)
 
     def test_list_sleep_should_success_2(self):
         sleeps_cnt = Sleep.objects.filter(owner=self.user_2).count()
